@@ -1,0 +1,32 @@
+import org.junit.jupiter.api.Test;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class WordCounterTest {
+
+    @Test
+    void countWords_shouldCountOccurrences() {
+        WordCounter wordCounter = new WordCounter();
+        wordCounter.countWords("apple banana apple orange banana");
+
+        assertEquals(2, wordCounter.getWordOccurrences().get("apple"));
+        assertEquals(2, wordCounter.getWordOccurrences().get("banana"));
+        assertEquals(1, wordCounter.getWordOccurrences().get("orange"));
+    }
+
+    @Test
+    void saveToTextFile_shouldSaveToFile() throws IOException {
+        WordCounter wordCounter = new WordCounter();
+        wordCounter.countWords("apple banana apple orange banana");
+
+        String fileName = "testFile.txt";
+        wordCounter.saveToTextFile(fileName);
+
+        String content = Files.readString(Paths.get(wordCounter));
+        assertEquals("apple-2\nbanana-2\norange-1\n", content);
+
+        Files.delete(Paths.get(wordCounter));
+    }
+}
